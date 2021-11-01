@@ -52,13 +52,13 @@ def home():
 
 	if side_jumpbox == 'All':
 	    failed_logs = auth_logs.loc[auth_logs['Access'] == 'Failed']
-	    pass_logs = auth_logs.loc[auth_logs['Access'] == 'Sucessful']
+	    pass_logs = auth_logs.loc[auth_logs['Access'] == 'Successful']
 
 	else: 
 	    for i in jump_boxes_options:
 	        if side_jumpbox == i:
 	            failed_logs = auth_logs.loc[auth_logs['Access'] == 'Failed']
-	            pass_logs = auth_logs.loc[auth_logs['Access'] == 'Sucessful']
+	            pass_logs = auth_logs.loc[auth_logs['Access'] == 'Successful']
 
 	            failed_logs = failed_logs.loc[auth_logs['Box'] == i]
 	            pass_logs = pass_logs.loc[auth_logs['Box'] == i]
@@ -173,18 +173,18 @@ def home():
 	    bcol_1, bcol_2 = st.beta_columns(2)
 
 
-	    tcol_1.header('Sucessful Authorizations')
-	    tcol_1.text('Sucessful Dataframe')
+	    tcol_1.header('Successful Authorizations')
+	    tcol_1.text('Successful Data Frame')
 	    tcol_1.dataframe(pass_logs[['Date_Time','Source_IP','Box','City','Country','User','By_Way']])
 	    
 	    
 
 	    tcol_2.header('Failed Authorizations')
-	    tcol_2.text('Failed Dataframe')
+	    tcol_2.text('Failed Data Frame')
 	    tcol_2.dataframe(failed_logs[['Date_Time','Source_IP','Box','City','Country','User']])
 	    
 	    
-	    bcol_1.text('Sucessful Connection IPs Map')
+	    bcol_1.text('Successful Connection IPs Map')
 
 	    bcol_1.pydeck_chart(
 	        pdk.Deck(

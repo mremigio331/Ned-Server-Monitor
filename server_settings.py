@@ -54,15 +54,15 @@ def add_server():
 			result = db.add_server(box, ip, username, private_key, port)
 			st.success('Server Added To Database')
 		except:
-			st.error('Server Unsucessful Added To Database')
+			st.error('Server Unsuccessful Added To Database')
 		try:
 			connection_check = db.server_connection_check(box)
-			if connection_check == 'Connection Sucessful':
-				st.success('Server Connection Sucessful')
+			if connection_check == 'Connection Successful':
+				st.success('Server Connection Successful')
 				st.balloons()
 
-			if connection_check == 'Connection Unsucessful':
-				st.error('Server Connection Unsucessful')
+			if connection_check == 'Connection Unsuccessful':
+				st.error('Server Connection Unsuccessful')
 		except:
 			st.error('Something is fucked up')
 
@@ -85,10 +85,10 @@ def delete_server():
 
 		try:
 			server_delete = db.delete_server(server_selection)
-			if server_delete == 'Delete Sucessful':
-				st.success('Server Sucessfully Deleted')
-			if server_delete == 'Delete Unsucessful':
-				st.error('Server Unsucessfully Deleted')
+			if server_delete == 'Delete Successful':
+				st.success('Server Successfully Deleted')
+			if server_delete == 'Delete Unsuccessful':
+				st.error('Server Unsuccessfully Deleted')
 		except:
 			st.error('Something is fucked up')
 	
@@ -140,38 +140,38 @@ def edit_server():
 				st.success('IP Updated')
 				try:
 					connection_check = db.server_connection_check(server_pick)
-					if connection_check == 'Connection Sucessful':
-						st.success('Server Connection Sucessful')
-					if connection_check == 'Connection Unsucessful':
-						st.error('Server Connection Unsucessful')
+					if connection_check == 'Connection Successful':
+						st.success('Server Connection Successful')
+					if connection_check == 'Connection Unsuccessful':
+						st.error('Server Connection Unsuccessful')
 				except:
 					st.error('Something is fucked up')
 			except:
-				st.error('Unsucessful IP Update')
+				st.error('Unsuccessful IP Update')
 		if change_username:
 			try:
 				db.update_server_info(new_username,'Username',server_pick)
 				st.success('Username Updated')
 			except:
-				st.error('Unsucessful Username Update')
+				st.error('Unsuccessful Username Update')
 		if change_key:
 			try:
 				db.update_server_info(new_key,'Private_Key',server_pick)
 				st.success('SSH Key Updated')
 			except:
-				st.error('Unsucessful SSH Key Update')
+				st.error('Unsuccessful SSH Key Update')
 		if change_port:
 			try:
 				db.update_server_info(new_port,'Port',server_pick)
 				st.success('Port Updated')
 			except:
-				st.error('Unsucessful Port Update')
+				st.error('Unsuccessful Port Update')
 		if change_server:
 			try:
 				db.update_server_info(new_server,'Box',server_pick)
 				st.success('Server Name Updated')
 			except:
-				st.error('Unsucessful Server Name Update')
+				st.error('Unsuccessful Server Name Update')
 	
 def server_status():
 	st.header('Server Status')
@@ -195,10 +195,10 @@ def server_status():
 	if status:
 		try:
 			connection_check = db.server_connection_check(server_selection)
-			if connection_check == 'Connection Sucessful':
-				st.success('Server Connection Sucessful')
-			if connection_check == 'Connection Unsucessful':
-				st.error('Server Connection Unsucessful')
+			if connection_check == 'Connection Successful':
+				st.success('Server Connection Successful')
+			if connection_check == 'Connection Unsuccessful':
+				st.error('Server Connection Unsuccessful')
 		except:
 			st.error('Something is fucked up')
 

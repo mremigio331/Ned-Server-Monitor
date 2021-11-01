@@ -3,7 +3,7 @@ import streamlit as st
 def info():
 	st.sidebar.image('Images/Ned_Logo_Emblem_T.png')
 	
-	st.title('Infomation')
+	st.title('Information')
 
 	st.header('Steps To Connecting To Server')
 	st.subheader('Creating SSH Keys')
@@ -11,10 +11,10 @@ def info():
 
 	st.subheader('SSH_Config Settings')
 	st.text('In order for the code to work properly you will need to change a setting in your ssh_config file.')
-	st.text('To acces the file, connect to your server.')
+	st.text('To access the file, connect to your server.')
 	st.text('Navigate to the sshd_config file which is located in /etc/ssh/sshd_config')
 	st.text('Unhash the Loglevel and change from INFO to VERBOSE')
-	st.text('It is also reccomened to change your SSH port')
+	st.text('It is also recommended to change your SSH port')
 
 	st.subheader('Connecting Ned To Your Server')
 	st.text('To connect Ned to your server, open the Server Settings page and enter in your server details. If you need to change any settings you can do so by selecting Edit Server in the Server Settings Page')

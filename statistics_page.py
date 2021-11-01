@@ -53,13 +53,13 @@ def statistics():
 
 	if side_jumpbox == 'All':
 	    failed_logs = auth_logs.loc[auth_logs['Access'] == 'Failed']
-	    pass_logs = auth_logs.loc[auth_logs['Access'] == 'Sucessful']
+	    pass_logs = auth_logs.loc[auth_logs['Access'] == 'Successful']
 
 	else: 
 	    for i in jump_boxes_options:
 	        if side_jumpbox == i:
 	            failed_logs = auth_logs.loc[auth_logs['Access'] == 'Failed']
-	            pass_logs = auth_logs.loc[auth_logs['Access'] == 'Sucessful']
+	            pass_logs = auth_logs.loc[auth_logs['Access'] == 'Successful']
 
 	            failed_logs = failed_logs.loc[auth_logs['Box'] == i]
 	            pass_logs = pass_logs.loc[auth_logs['Box'] == i]
@@ -170,12 +170,12 @@ def statistics():
 	dates.sort()
 
 	st.set_option('deprecation.showPyplotGlobalUse', False)
-	st.header('Sucessful Access')
+	st.header('Successful Access')
 	new = pass_logs.groupby('Date')['Time'].nunique()
 	st.line_chart(new)
 
 	st.set_option('deprecation.showPyplotGlobalUse', False)
-	st.header('Unsucessful Access')
+	st.header('Unsuccessful Access')
 	newf = failed_logs.groupby('Date')['Time'].nunique()
 	#new['Time'] = new['Time'].astype(int)
 	plotnew = newf.to_frame().reset_index()
@@ -188,6 +188,6 @@ def statistics():
 	country_fail_df.rename({'Time':'Count'}, axis=1, inplace=True)
 	country_fail_df = country_fail_df.reset_index()
 
-	st.header('Country Unsucessful Access Count')
+	st.header('Country Unsuccessful Access Count')
 	st.table(country_fail_df)
 

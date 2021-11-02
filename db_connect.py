@@ -38,7 +38,7 @@ def add_server(box, ip, username, private_key, port):
 def auth_log_to_db():
     db = sqlite3.connect('Data/ned.db')
     df = pd.read_sql_query('SELECT * FROM Full_Log', db)
-    full_log = df['log'].tolist()
+    full_log = df['Log'].tolist()
 
     auth_logs = pd.DataFrame(columns = ['Date_Time', 'Date', 'Time','Source_IP','Access','Box','User','By_Way', 'City', 'Country', 'Lat', 'Lon'])
 

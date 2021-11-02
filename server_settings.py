@@ -93,7 +93,7 @@ def delete_server():
 			st.error('Something is fucked up')
 	
 def edit_server():
-	st.header("Edit Server Info")
+	st.header('Edit Server Info')
 	server_info = db.grab_box_info()
 	server_info_s = server_info.set_index('Box')
 	server_info_s['IP'] = server_info_s['IP'].astype(str)

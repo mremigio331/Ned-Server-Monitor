@@ -23,8 +23,8 @@ from datetime import datetime, timedelta
 
 def home():
 	
-	header = st.beta_container()
-	dataset= st.beta_container()
+	header = st.container()
+	dataset= st.container()
 
 	
 
@@ -145,7 +145,7 @@ def home():
 	    if i not in dates:
 	        dates.append(i)     
 
-	layout = st.sidebar.beta_columns([2, 1])
+	layout = st.sidebar.columns([2, 1])
 
 	with layout[0]: 
 	    start_date = st.date_input('Start Date:',max_value=datetime.today()) # omit "sidebar"
@@ -169,8 +169,8 @@ def home():
 	    st.title('Home Page')
 	    
 	with dataset:    
-	    tcol_1, tcol_2 = st.beta_columns(2)
-	    bcol_1, bcol_2 = st.beta_columns(2)
+	    tcol_1, tcol_2 = st.columns(2)
+	    bcol_1, bcol_2 = st.columns(2)
 
 
 	    tcol_1.header('Successful Authorizations')

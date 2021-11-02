@@ -43,7 +43,7 @@ def auth_log_to_db():
     auth_logs = pd.DataFrame(columns = ['Date_Time', 'Date', 'Time','Source_IP','Access','Box','User','By_Way', 'City', 'Country', 'Lat', 'Lon'])
 
 
-    print('Creating Dataframe')
+    print('Creating Data Frame')
     time_bar = len(full_log)
     with alive_bar(time_bar) as bar:
         for x in full_log:
@@ -81,7 +81,7 @@ def auth_log_to_db():
                             lon = response.location.longitude
 
 
-                            new_row = {'Date_Time':date_time.split(' PDT-0700')[0],'Source_IP':ip, 'Access':'Sucessful','Box':box,'User':user,'By_Way':'Public_Key','City':city,'Country':country,'Lat':lat,'Lon':lon,'Date':date_time.split(' ')[0],'Time':date_time.split(' ')[1]}
+                            new_row = {'Date_Time':date_time.split(' PDT-0700')[0],'Source_IP':ip, 'Access':'Successful','Box':box,'User':user,'By_Way':'Public_Key','City':city,'Country':country,'Lat':lat,'Lon':lon,'Date':date_time.split(' ')[0],'Time':date_time.split(' ')[1]}
                             auth_logs = auth_logs.append(new_row, ignore_index=True)
 
 
@@ -109,7 +109,7 @@ def auth_log_to_db():
                             lat = response.location.latitude
                             lon = response.location.longitude
 
-                            new_row = {'Date_Time':date_time.split(' PDT-0700')[0],'Source_IP':ip, 'Access':'Sucessful','Box':box,'User':user,'By_Way':'Password','City':city,'Country':country,'Lat':lat,'Lon':lon,'Date':date_time.split(' ')[0],'Time':date_time.split(' ')[1]}
+                            new_row = {'Date_Time':date_time.split(' PDT-0700')[0],'Source_IP':ip, 'Access':'Successful','Box':box,'User':user,'By_Way':'Password','City':city,'Country':country,'Lat':lat,'Lon':lon,'Date':date_time.split(' ')[0],'Time':date_time.split(' ')[1]}
                             auth_logs = auth_logs.append(new_row, ignore_index=True)
                 except:
                     pass
@@ -182,7 +182,7 @@ def auth_log_to_db():
             else:
                 pass
             bar()
-    print('Dataframes complete')
+    print('Data Frames complete')
     auth_logs["City"].fillna('None', inplace = True)
     auth_logs.sort_values(by=['Date_Time'], inplace=True, ascending=False)
 
@@ -215,9 +215,9 @@ def delete_server(server):
         conn.commit()
         c.close()
         conn.close()
-        return('Delete Sucessful')
+        return('Delete Successful')
     except:
-        return('Delete Unsucessful')
+        return('Delete Unsuccessful')
 
 def db_log_add(full_logs):
     time_bar = len(full_logs)
@@ -275,10 +275,10 @@ def log_pull():
 
         try:
             with pysftp.Connection(ip, username=usname, private_key=p_key, port=box_port, cnopts=cnopts) as sftp:
-                with sftp.cd('.'):             # temporarily chdir to public
+                with sftp.cd('.'):
                     sftp.get('/var/log/auth.log', save_name)         # get a remote file
-                    st.success('Sucessfully connected to ' + box)
-                    print('Sucessfully SCP file from', box)
+                    st.success('Successfully connected to ' + box)
+                    print('Successfully SCP file from', box)
             with open(save_name, 'r') as f:
                 log = [line.strip() for line in f]
                 for a in log:
@@ -290,7 +290,7 @@ def log_pull():
                 else:
                     print('The file does not exist')
         except:
-            st.error('Unsucessfully connected to ' + x)
+            st.error('Unsuccessfully connected to ' + x)
             print('Connection not made to', box)
 
     db_log_add(full_logs)        
@@ -319,12 +319,12 @@ def server_connection_check(server):
 
         with pysftp.Connection(ip, username=usname, private_key=p_key, port=box_port, cnopts=cnopts) as sftp:
             with sftp.cd('.'):
-                return('Connection Sucessful')
-                print('Connection Sucessful')
+                return('Connection Successful')
+                print('Connection Successful')
 
     except:
-        return('Connection Unsucessful')
-        print('Connection Unsucessful')
+        return('Connection Unsuccessful')
+        print('Connection Unsuccessful')
            
 def update_server_info(change,location,server_name):
     conn = sqlite3.connect('Data/ned.db')

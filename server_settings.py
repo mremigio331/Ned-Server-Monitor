@@ -43,7 +43,7 @@ def add_server():
 	st.header('Add Server')
 	box = st.text_input('Box Name')
 	ip = st.text_input('IP Address')
-	username = st.text_input('Username')
+	username = st.text_input('Username By Default = root')
 	private_key = st.text_input('Private Key Location')
 	port = st.text_input('Port')
 

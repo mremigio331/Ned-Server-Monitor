@@ -42,7 +42,7 @@ def auth_log_to_db():
 
     auth_logs = pd.DataFrame(columns = ['Date_Time', 'Date', 'Time','Source_IP','Access','Box','User','By_Way', 'City', 'Country', 'Lat', 'Lon'])
 
-
+    st.info('Creating Data Frame')
     print('Creating Data Frame')
     time_bar = len(full_log)
     with alive_bar(time_bar) as bar:
@@ -253,6 +253,7 @@ def log_pull():
         box = str(row['Box'])
         box_names.append(box)
         print('Appended', box)
+        st.info('Appended ' + box)
     
     for x in box_names:
         db = sqlite3.connect('Data/ned.db')

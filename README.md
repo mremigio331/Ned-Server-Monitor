@@ -24,11 +24,19 @@ Steps To Connecting To Server
 
 	Connecting Ned To Your Server
 
-		To connect Ned to your server, open the Server Settings page and enter in your server details. If you need to change any settings you can do so by selecting Edit Server in the Server Settings Page')
-		
-		To confirm you have access to your server you can select Server Status in the Server Settings page.')
+		To connect Ned to your server, open the Server Settings page and enter in your server details. If you need to change any settings you can do so by selecting Edit Server in the Server Settings Page.
 
-	Grabbing Information from your server
+			Server Name = Name of your server
+
+			IP = The IP address of your server
+
+			Username = The username used to connect to the server. For now root is the only user that can be used
+
+			Port = The SSH port
+		
+		To confirm you have access to your server you can select Server Status in the Server Settings page
+
+	Grabbing Information From Your Server
 
 		To get the authentication logs from your server navigate to the Home Page and select Load Data. Below the maps notifications will appear to indicate if proper connections were made.
 

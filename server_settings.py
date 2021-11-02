@@ -41,7 +41,7 @@ def server_page():
 def add_server():
 
 	st.header('Add Server')
-	box = st.text_input('Box Name')
+	box = st.text_input('Server Name')
 	ip = st.text_input('IP Address')
 	username = st.text_input('Username By Default = root')
 	private_key = st.text_input('Private Key Location')

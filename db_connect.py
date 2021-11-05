@@ -286,6 +286,7 @@ def log_pull():
                     full_logs.append(a)
                     
                 print('Created log for', box)
+                st.info('Created Log For ' + box)
                 if os.path.exists(save_name):
                       os.remove(save_name)
                 else:

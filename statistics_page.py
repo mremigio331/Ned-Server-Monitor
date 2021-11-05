@@ -146,7 +146,7 @@ def statistics():
 	    if i not in dates:
 	        dates.append(i)     
 
-	layout = st.sidebar.beta_columns([2, 1])
+	layout = st.sidebar.columns([2, 1])
 
 	with layout[0]: 
 	    start_date = st.date_input('Start Date:',max_value=datetime.today()) # omit "sidebar"

@@ -1,0 +1,9 @@
+streamlit
+pandas
+pysftp
+pytz
+geoip2
+pydeck
+alive-progress
+stqdm
+altair

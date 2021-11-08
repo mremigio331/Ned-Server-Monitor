@@ -26,11 +26,6 @@ def home():
 	header = st.container()
 	dataset= st.container()
 
-	
-
-
-
-
 	#Side Bar
 	result = st.sidebar.button('Load Data')
 	if result:
@@ -246,11 +241,8 @@ def home():
 	        )
 	 	)
 
-#@st.cache(suppress_st_warning=True)
 def search():
 	db_connect.log_pull()
-	st.info('Attempting to place logs in Ned Database')
 	db_connect.auth_log_to_db()
-
 	auth_logs = db_connect.auth_logs_to_df()
 	auth_logs.sort_values(by=['Date_Time'], inplace=True, ascending=False)

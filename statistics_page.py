@@ -1,35 +1,14 @@
 import streamlit as st
-import os
-import glob
 import pandas as pd
-import pysftp
-from time import strptime
-from datetime import datetime
-from pytz import timezone
-from time import strptime
-from datetime import datetime
-from dateutil import tz
-import datetime
-import pytz
-import geoip2.database
-import pydeck as pdk
-from alive_progress import alive_bar, config_handler
-from dateutil.relativedelta import relativedelta
 import numpy as np
-from pandas_datareader import data
-import db_connect
+import db_connect as db
 from datetime import datetime, timedelta
-import streamlit as st
-import pandas as pd
-import numpy as np
-import plotly.figure_factory as ff
-import matplotlib.pyplot as plt
 import altair as alt
 
 
 def statistics():
 	st.title('Statistics')
-	auth_logs = db_connect.auth_logs_to_df()
+	auth_logs = db.auth_logs_to_df()
 	auth_logs['Hour'] = auth_logs['Time'].str.split(':').str[0]
 	auth_logs = auth_logs.sort_values(['Hour'], ascending=True)
 
@@ -191,3 +170,8 @@ def statistics():
 	st.header('Country Unsuccessful Access Count')
 	st.table(country_fail_df)
 
+def search():
+	db.log_pull()
+	db.auth_log_to_db()
+	auth_logs = db.auth_logs_to_df()
+	auth_logs.sort_values(by=['Date_Time'], inplace=True, ascending=False)

@@ -18,7 +18,8 @@ from dateutil.relativedelta import relativedelta
 import numpy as np
 from pandas_datareader import data
 import sqlite3
-import db_connect
+from stqdm import stqdm
+
 
 
 def add_server(box, ip, username, private_key, port):
@@ -42,11 +43,11 @@ def auth_log_to_db():
 
     auth_logs = pd.DataFrame(columns = ['Date_Time', 'Date', 'Time','Source_IP','Access','Box','User','By_Way', 'City', 'Country', 'Lat', 'Lon'])
 
-    st.info('Creating Data Frame')
     print('Creating Data Frame')
     time_bar = len(full_log)
+    
     with alive_bar(time_bar) as bar:
-        for x in full_log:
+        for x in stqdm(full_log, desc='Analyzing All Auth_Logs'):
             try:
                 x = x.replace('  ', ' ')
             except:
@@ -182,6 +183,7 @@ def auth_log_to_db():
             else:
                 pass
             bar()
+
     print('Data Frames complete')
     auth_logs["City"].fillna('None', inplace = True)
     auth_logs.sort_values(by=['Date_Time'], inplace=True, ascending=False)
@@ -231,8 +233,6 @@ def db_log_add(full_logs):
 
 def grab_box_info():
     print('Loading Box Information')
-    #return ('Loading Box Information')
-
     try:
         db = sqlite3.connect('Data/ned.db')
         df = pd.read_sql_query("SELECT * FROM Box_Info", db) 
@@ -253,7 +253,6 @@ def log_pull():
         box = str(row['Box'])
         box_names.append(box)
         print('Appended', box)
-        st.info('Appended ' + box)
     
     for x in box_names:
         db = sqlite3.connect('Data/ned.db')
@@ -278,7 +277,6 @@ def log_pull():
             with pysftp.Connection(ip, username=usname, private_key=p_key, port=box_port, cnopts=cnopts) as sftp:
                 with sftp.cd('.'):
                     sftp.get('/var/log/auth.log', save_name)         # get a remote file
-                    st.success('Successfully connected to ' + box)
                     print('Successfully SCP file from', box)
             with open(save_name, 'r') as f:
                 log = [line.strip() for line in f]
@@ -286,7 +284,6 @@ def log_pull():
                     full_logs.append(a)
                     
                 print('Created log for', box)
-                st.info('Created Log For ' + box)
                 if os.path.exists(save_name):
                       os.remove(save_name)
                 else:

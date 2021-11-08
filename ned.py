@@ -1,26 +1,4 @@
 import streamlit as st
-import os
-import glob
-import pandas as pd
-import pysftp
-from time import strptime
-from datetime import datetime
-from pytz import timezone
-from time import strptime
-from datetime import datetime
-from dateutil import tz
-import datetime
-import pytz
-import geoip2.database
-import pydeck as pdk
-from alive_progress import alive_bar, config_handler
-from dateutil.relativedelta import relativedelta
-import numpy as np
-from pandas_datareader import data
-import db_connect
-import sqlite3
-
-from datetime import datetime, timedelta
 
 import home_page as home
 import statistics_page as stats 
@@ -41,8 +19,3 @@ if page == 'Server Settings':
     server.server_page()
 if page == 'Statistics':
     stats.statistics()
-
-
-    
-
-

@@ -1,6 +1,12 @@
 Ned Server Monitoring System 
 
+![Output](Images/Ned_Logo_Emblem_Full.png)
+
 Ned is a server monitoring code that allows you to see what IPs have successfully and unsuccessfully connected to your servers. Ned uses Streamlit for it's GUI. 
+
+To install all dependencies needed:
+
+	pip install -r requirements.txt
 
 To run the code input the following:
 	
@@ -75,3 +81,9 @@ Looking Forward
 		Optimizing the authentication logs to data frame in order to speed up the process.
 
 		Option to create SSH Keys within Ned rather than creating them outside Ned via a terminal. 
+
+Screenshots
+
+![Output](Images/Ned_Network_Monitor.png)
+![Output](Images/Server_Settings.png)
+![Output](Images/Server_Status.png)

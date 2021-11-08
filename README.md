@@ -84,6 +84,6 @@ Looking Forward
 
 Screenshots
 
-![Output](Images/Ned_Network_Monitor.png)
+![Output](Images/Ned_Network_Monitor.JPG)
 ![Output](Images/Server_Settings.png)
 ![Output](Images/Server_Status.png)

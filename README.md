@@ -1,6 +1,6 @@
 Ned Server Monitoring System 
 
-![Output](Images/Ned_Logo_Emblem_Full.png)
+![Output](Images/Ned_Logo_Pictorial_Full.png)
 
 Ned is a server monitoring code that allows you to see what IPs have successfully and unsuccessfully connected to your servers. Ned uses Streamlit for it's GUI. 
 

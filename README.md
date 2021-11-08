@@ -6,7 +6,7 @@ Ned is a server monitoring code that allows you to see what IPs have successfull
 
 # To install all dependencies needed:
 
-pip install -r requirements.txt
+$ pip install -r requirements.txt
 
 # To run the code input the following:
 

@@ -16,7 +16,6 @@ import pydeck as pdk
 from alive_progress import alive_bar, config_handler
 from dateutil.relativedelta import relativedelta
 import numpy as np
-from pandas_datareader import data
 import sqlite3
 from stqdm import stqdm
 

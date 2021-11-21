@@ -13,9 +13,9 @@ import pytz
 import pydeck as pdk
 from dateutil.relativedelta import relativedelta
 import numpy as np
-import db_connect
 from datetime import datetime, timedelta
 
+import db_connect as db
 
 def home():
 	
@@ -27,7 +27,7 @@ def home():
 	if result:
 		search()
 
-	auth_logs = db_connect.auth_logs_to_df()
+	auth_logs = db.auth_logs_to_df()
 	auth_logs.sort_values(by=['Date_Time'], inplace=True, ascending=False)
 
 
@@ -238,7 +238,7 @@ def home():
 	 	)
 
 def search():
-	db_connect.log_pull()
-	db_connect.auth_log_to_db()
-	auth_logs = db_connect.auth_logs_to_df()
+	db.log_pull()
+	db.auth_log_to_db()
+	auth_logs = db.auth_logs_to_df()
 	auth_logs.sort_values(by=['Date_Time'], inplace=True, ascending=False)

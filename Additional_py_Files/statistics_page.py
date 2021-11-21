@@ -1,9 +1,10 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import db_connect as db
 from datetime import datetime, timedelta
 import altair as alt
+
+import db_connect as db
 
 
 def statistics():

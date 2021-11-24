@@ -17,7 +17,7 @@ def server_page():
 	if server_settings_selection == 'Server Status':
 	    server_status()
 
-	st.sidebar.image('Images/Ned_Logo_Emblem_T.png')
+	st.sidebar.image('Images/Ned_Logo_Pictorial_T.png')
 
 
 def add_server():

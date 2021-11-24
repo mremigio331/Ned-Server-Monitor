@@ -42,6 +42,7 @@ def auth_log_to_db():
 
     auth_logs = pd.DataFrame(columns = ['Date_Time', 'Date', 'Time','Source_IP','Access','Box','User','By_Way', 'City', 'Country', 'Lat', 'Lon'])
 
+    country_codes = grab_country_codes()
     print('Creating Data Frame')
     time_bar = len(full_log)
     
@@ -77,6 +78,12 @@ def auth_log_to_db():
                                 response = reader.city(ip)
                             city = response.city.name
                             country = response.country.iso_code
+                            try:
+                                row = (country_codes.loc[country_codes['Alpha_2_Code'] == country])
+                                df_list = row.values.tolist()
+                                country = df_list[0][0]
+                            except:
+                                pass
                             lat = response.location.latitude
                             lon = response.location.longitude
 
@@ -106,6 +113,12 @@ def auth_log_to_db():
                                 response = reader.city(ip)
                             city = response.city.name
                             country = response.country.iso_code
+                            try:
+                                row = (country_codes.loc[country_codes['Alpha_2_Code'] == country])
+                                df_list = row.values.tolist()
+                                country = df_list[0][0]
+                            except:
+                                pass
                             lat = response.location.latitude
                             lon = response.location.longitude
 
@@ -138,6 +151,12 @@ def auth_log_to_db():
                                 response = reader.city(ip)
                             city = response.city.name
                             country = response.country.iso_code
+                            try:
+                                row = (country_codes.loc[country_codes['Alpha_2_Code'] == country])
+                                df_list = row.values.tolist()
+                                country = df_list[0][0]
+                            except:
+                                pass
                             lat = response.location.latitude
                             lon = response.location.longitude
 
@@ -167,6 +186,12 @@ def auth_log_to_db():
                                 response = reader.city(ip)
                             city = response.city.name
                             country = response.country.iso_code
+                            try:
+                                row = (country_codes.loc[country_codes['Alpha_2_Code'] == country])
+                                df_list = row.values.tolist()
+                                country = df_list[0][0]
+                            except:
+                                pass
                             lat = response.location.latitude
                             lon = response.location.longitude
 
@@ -224,7 +249,7 @@ def db_log_add(full_logs):
     time_bar = len(full_logs)
     db = sqlite3.connect('Data/ned.db')
     with alive_bar(time_bar) as bar:
-        for x in full_logs:
+        for x in stqdm(full_logs, desc='Adding full logs to database'):
             cursor = db.cursor()
             cursor.execute('INSERT OR IGNORE INTO Full_Log(log) VALUES (?)',[x])
             db.commit()
@@ -239,6 +264,16 @@ def grab_box_info():
         print('Box Information successfully')
     except:
         print('Failed to connect to the database')         
+
+def grab_country_codes():
+    print('Loading Box Information')
+    try:
+        db = sqlite3.connect('Data/ned.db')
+        df = pd.read_sql_query("SELECT * FROM Country_Codes", db) 
+        return df
+        print('Successfully collected country codes')
+    except:
+        print('Failed to connect to the database')
             
 def log_pull():
 
@@ -323,6 +358,12 @@ def server_connection_check(server):
     except:
         return('Connection Unsuccessful')
         print('Connection Unsuccessful')
+
+def ned_settings_grab():
+    pass
+
+def ned_settings_update():
+    pass
            
 def update_server_info(change,location,server_name):
     conn = sqlite3.connect('Data/ned.db')

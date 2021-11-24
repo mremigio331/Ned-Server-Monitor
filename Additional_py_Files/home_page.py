@@ -8,7 +8,7 @@ from pytz import timezone
 from time import strptime
 from datetime import datetime
 from dateutil import tz
-import datetime
+from datetime import datetime
 import pytz
 import pydeck as pdk
 from dateutil.relativedelta import relativedelta
@@ -29,7 +29,6 @@ def home():
 
 	auth_logs = db.auth_logs_to_df()
 	auth_logs.sort_values(by=['Date_Time'], inplace=True, ascending=False)
-
 
 	# Jumpbox Data
 	jump_boxes = []
@@ -123,6 +122,7 @@ def home():
 	    
 	    
 	# Dates
+
 	d = datetime.today() - timedelta(days=7)
 
 	dates = []
@@ -136,22 +136,39 @@ def home():
 	    if i not in dates:
 	        dates.append(i)     
 
-	layout = st.sidebar.columns([2, 1])
+	all_dates_check = st.sidebar.checkbox('All Dates')
 
-	with layout[0]: 
-	    start_date = st.date_input('Start Date:',max_value=datetime.today()) # omit "sidebar"
-	with layout[0]: 
-	    end_date = st.date_input('End Date:',value=(d),max_value=datetime.today()) # omit "sidebar"
+	if all_dates_check:
+		pass
 
-	new_start = str(start_date).replace('-','/')
-	new_end = str(end_date).replace('-','/')
+	else:
+		try:
+			layout = st.sidebar.columns([2, 1])
+			
+
+			min_date = min(dates)
+			year = min_date.split('/')[0]
+			month = min_date.split('/')[1]
+			date = min_date.split('/')[2]
+
+			min_date_time = datetime(int(year), int(month), int(date))
+
+			with layout[0]: 
+			    start_date = st.date_input('Start Date:',max_value=datetime.today()) # omit "sidebar"
+			with layout[0]: 
+			    end_date = st.date_input('End Date:',value=(d), min_value = min_date_time,max_value=datetime.today()) # omit "sidebar"
+
+			new_start = str(start_date).replace('-','/')
+			new_end = str(end_date).replace('-','/')
 
 
 
-	pass_logs = pass_logs[(pass_logs['Date'] > new_end) & (pass_logs['Date'] <= new_start)]
-	failed_logs = failed_logs[(failed_logs['Date'] > new_end) & (failed_logs['Date'] <= new_start)]
-
-	st.sidebar.image('Images/Ned_Logo_Emblem_T.png')
+			pass_logs = pass_logs[(pass_logs['Date'] > new_end) & (pass_logs['Date'] <= new_start)]
+			failed_logs = failed_logs[(failed_logs['Date'] > new_end) & (failed_logs['Date'] <= new_start)]
+		except:
+			pass
+			
+	st.sidebar.image('Images/Ned_Logo_Pictorial_T.png')
 
 
 
@@ -179,7 +196,7 @@ def home():
 
 	    bcol_1.pydeck_chart(
 	        pdk.Deck(
-	            map_style='mapbox://styles/mapbox/light-v9',
+	            map_style='mapbox://styles/mapbox/dark-v10',
 	            layers = [
 	            	pdk.Layer(
 	                    "HeatmapLayer",
@@ -199,7 +216,7 @@ def home():
 	                    radius_min_pixels=5,
 	                    radius_max_pixels=100,
 	                    line_width_min_pixels=1,
-	                    get_fill_color=[252, 3, 152],
+	                    get_fill_color=[0, 128, 0],
 	                    get_line_color=[0, 0, 0]
 	                ),
 	                 
@@ -209,7 +226,7 @@ def home():
 	    bcol_2.text('Failed Connection IPs Map')
 	    bcol_2.pydeck_chart(
 	        pdk.Deck(
-	            map_style='mapbox://styles/mapbox/light-v9',
+	            map_style='mapbox://styles/mapbox/dark-v10',
 	            layers = [
 	            	pdk.Layer(
 	                    "HeatmapLayer",
@@ -229,8 +246,8 @@ def home():
 	                    radius_min_pixels=5,
 	                    radius_max_pixels=100,
 	                    line_width_min_pixels=1,
-	                    get_fill_color=[252, 3, 152],
-	                    get_line_color=[0, 0, 0]
+	                    get_fill_color=[255,0,0],
+	                    get_line_color=[0,0,0]
 	                ),
 	                 
 	            ],

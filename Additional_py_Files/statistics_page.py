@@ -126,22 +126,35 @@ def statistics():
 	    if i not in dates:
 	        dates.append(i)     
 
-	layout = st.sidebar.columns([2, 1])
+	all_dates_check = st.sidebar.checkbox('All Dates')
 
-	with layout[0]: 
-	    start_date = st.date_input('Start Date:',max_value=datetime.today()) # omit "sidebar"
-	with layout[0]: 
-	    end_date = st.date_input('End Date:',value=(d),max_value=datetime.today()) # omit "sidebar"
+	if all_dates_check:
+		pass
 
-	new_start = str(start_date).replace('-','/')
-	new_end = str(end_date).replace('-','/')
+	else:
+		try:
+			layout = st.sidebar.columns([2, 1])
+			
 
+			min_date = min(dates)
+			year = min_date.split('/')[0]
+			month = min_date.split('/')[1]
+			date = min_date.split('/')[2]
 
+			min_date_time = datetime(int(year), int(month), int(date))
 
-	pass_logs = pass_logs[(pass_logs['Date'] > new_end) & (pass_logs['Date'] <= new_start)]
-	failed_logs = failed_logs[(failed_logs['Date'] > new_end) & (failed_logs['Date'] <= new_start)]
+			with layout[0]: 
+			    start_date = st.date_input('Start Date:',max_value=datetime.today()) # omit "sidebar"
+			with layout[0]: 
+			    end_date = st.date_input('End Date:',value=(d), min_value = min_date_time,max_value=datetime.today()) # omit "sidebar"
 
-	st.sidebar.image('Images/Ned_Logo_Emblem_T.png')
+			new_start = str(start_date).replace('-','/')
+			new_end = str(end_date).replace('-','/')
+			pass_logs = pass_logs[(pass_logs['Date'] > new_end) & (pass_logs['Date'] <= new_start)]
+			failed_logs = failed_logs[(failed_logs['Date'] > new_end) & (failed_logs['Date'] <= new_start)]
+		except:
+			pass
+	st.sidebar.image('Images/Ned_Logo_Pictorial_T.png')
 
 	dates = []
 	all_dates = (auth_logs['Date'].unique().tolist())
@@ -149,27 +162,116 @@ def statistics():
 	    dates.append(i)
 	dates.sort()
 
-	st.set_option('deprecation.showPyplotGlobalUse', False)
-	st.header('Successful Access')
-	new = pass_logs.groupby('Date')['Time'].nunique()
-	st.line_chart(new)
+	st.header('Successful Access Dates')
+	pass_access_datedf = pass_logs
+	pass_access_datedf = pass_access_datedf.groupby('Date')['Time'].nunique()
+	pass_access_date_df = pd.DataFrame(pass_access_datedf).reset_index()
+	pass_access_date_df.rename({'Time':'Count'}, axis=1, inplace=True)
+	st.altair_chart(alt.Chart(pass_access_date_df).mark_bar().encode(
+		x=alt.X('Date',scale=alt.Scale(nice=False)),
+		y=alt.Y('Count'),
+		tooltip=['Date','Count']
+		).configure_mark(
+		opacity=0.2,
+		color='green',
+		),
+	use_container_width=True)
 
-	st.set_option('deprecation.showPyplotGlobalUse', False)
-	st.header('Unsuccessful Access')
-	newf = failed_logs.groupby('Date')['Time'].nunique()
-	#new['Time'] = new['Time'].astype(int)
-	plotnew = newf.to_frame().reset_index()
+	try:
+		st.header('Unsuccessful Access Dates')
+		failed_access_datedf = failed_logs
+		failed_access_datedf = failed_access_datedf.groupby('Date')['Time'].nunique()
+		failed_access_date_df = pd.DataFrame(failed_access_datedf).reset_index()
+		failed_access_date_df.rename({'Time':'Count'}, axis=1, inplace=True)
+		st.altair_chart(alt.Chart(failed_access_date_df).mark_bar().encode(
+			x=alt.X('Date',scale=alt.Scale(nice=False)),
+			y=alt.Y('Count'),
+			tooltip=['Date','Count']
+			).configure_mark(
+			opacity=0.2,
+			color='red',
+			),
+		use_container_width=True)
+	except:
+		pass
 
-	#st.dataframe(plotnew)
-	st.line_chart(newf)
-	alt.Chart(plotnew).mark_line(point=True).encode(x='Time',y='Date')
-	country_fail = failed_logs.groupby('Country')['Time'].nunique()
-	country_fail_df = country_fail.to_frame()
-	country_fail_df.rename({'Time':'Count'}, axis=1, inplace=True)
-	country_fail_df = country_fail_df.reset_index()
+	try:
+		st.set_option('deprecation.showPyplotGlobalUse', False)
+		st.header('Unsuccessful Access Times')
+		failed_timedf = failed_logs
+		failed_timedf[['Hour','Minute','Second']] = failed_logs['Time'].str.split(':', 3, expand=True)
+		failed_time_hour = failed_timedf.groupby('Hour')['Time'].nunique()
+		failed_hour_df = pd.DataFrame(failed_time_hour).reset_index()
+		failed_hour_df.rename({'Time':'Count'}, axis=1, inplace=True)
+		st.altair_chart(alt.Chart(failed_hour_df).mark_bar().encode(
+			x=alt.X('Hour',scale=alt.Scale(nice=False)),
+			y=alt.Y('Count'),
+			tooltip=['Hour','Count']
+			).configure_mark(
+			opacity=0.2,
+			color='red',
+			),
+		use_container_width=True)
+	except:
+		pass
 
-	st.header('Country Unsuccessful Access Count')
-	st.table(country_fail_df)
+	try:
+		box_fail = failed_logs.groupby('Box')['Time'].nunique()
+		box_fail_df = box_fail.to_frame()
+		box_fail_df.rename({'Time':'Count'}, axis=1, inplace=True)
+		box_fail_df = box_fail_df.reset_index()
+		box_fail_df = box_fail_df.sort_values(by='Count', ascending=False)
+
+		st.header('Box Unsuccessful Access Count')
+		st.table(box_fail_df)
+	except:
+		pass
+
+	try:
+		country_fail = failed_logs.groupby('Country')['Time'].nunique()
+		country_fail_df = country_fail.to_frame()
+		country_fail_df.rename({'Time':'Count'}, axis=1, inplace=True)
+		country_fail_df = country_fail_df.reset_index()
+		country_fail_df = country_fail_df.sort_values(by='Count', ascending=False)
+		country_fail_list = country_fail_df.index.tolist()
+		country_list_count = len(country_fail_list)
+
+		st.header('Country Unsuccessful Access Count')
+		country_count_slider = st.slider('Country Count', max_value=country_list_count, value=5)
+		st.table(country_fail_df.head(country_count_slider).set_index('Country'))
+	except:
+		pass
+
+	try:
+		city_fail = failed_logs.groupby(['City','Country'])['Time'].nunique()
+		city_fail_df = city_fail.to_frame()
+		city_fail_df.rename({'Time':'Count'}, axis=1, inplace=True)
+		city_fail_df = city_fail_df.reset_index()
+		city_fail_df = city_fail_df.sort_values(by='Count', ascending=False)
+		city_fail_list = city_fail_df.index.tolist()
+		city_list_count = len(city_fail_list)
+
+		st.header('City Unsuccessful Access Count')
+		city_count_slider = st.slider('City Count', max_value=city_list_count, value=5)
+		st.table(city_fail_df.head(city_count_slider).set_index('City'))
+	except:
+		pass
+
+	try:
+		username_fail = failed_logs.groupby('User')['Time'].nunique()
+		username_fail_df = username_fail.to_frame()
+		username_fail_df.rename({'Time':'Count'}, axis=1, inplace=True)
+		username_fail_df = username_fail_df.reset_index()
+		username_fail_df = username_fail_df.sort_values(by='Count', ascending=False)
+		username_fail_list = username_fail_df.index.tolist()
+		username_list_count = len(username_fail_list)
+
+		st.header('Username Unsuccessful Access Count')
+		username_count_slider = st.slider('Username Count', max_value=username_list_count, value=5)
+		st.table(username_fail_df.head(username_count_slider).set_index('User'))
+	except:
+		pass
+
 
 def search():
 	db.log_pull()

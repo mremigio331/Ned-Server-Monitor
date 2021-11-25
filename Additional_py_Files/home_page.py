@@ -29,6 +29,7 @@ def home():
 
 	auth_logs = db.auth_logs_to_df()
 	auth_logs.sort_values(by=['Date_Time'], inplace=True, ascending=False)
+	auth_logs = auth_logs.set_index('Date_Time')
 
 	# Jumpbox Data
 	jump_boxes = []
@@ -183,13 +184,13 @@ def home():
 
 	    tcol_1.header('Successful Authorizations')
 	    tcol_1.text('Successful Data Frame')
-	    tcol_1.dataframe(pass_logs[['Date_Time','Source_IP','Box','City','Country','User','By_Way']])
+	    tcol_1.dataframe(pass_logs[['Source_IP','Box','City','Country','User','By_Way']])
 	    
 	    
 
 	    tcol_2.header('Failed Authorizations')
 	    tcol_2.text('Failed Data Frame')
-	    tcol_2.dataframe(failed_logs[['Date_Time','Source_IP','Box','City','Country','User']])
+	    tcol_2.dataframe(failed_logs[['Source_IP','Box','City','Country','User']])
 	    
 	    
 	    bcol_1.text('Successful Connection IPs Map')
@@ -206,7 +207,7 @@ def home():
 	                ),
 	                pdk.Layer(
 	                    'ScatterplotLayer',
-	                    pass_logs,
+	                    pass_logs.drop_duplicates(),
 	                    get_position='[Lon, Lat]',
 	                    pickable=True,
 	                    opacity=0.8,
@@ -236,7 +237,7 @@ def home():
 	                ),
 	                 pdk.Layer(
 	                    'ScatterplotLayer',
-	                    failed_logs,
+	                    failed_logs.drop_duplicates(),
 	                    get_position='[Lon, Lat]',
 	                    pickable=True,
 	                    opacity=0.8,

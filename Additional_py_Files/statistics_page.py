@@ -272,6 +272,20 @@ def statistics():
 	except:
 		pass
 
+	#try:
+	ip_fail = failed_logs.groupby('Source_IP')['Time'].nunique()
+	ip_fail_df = ip_fail.to_frame()
+	ip_fail_df.rename({'Time':'Count'}, axis=1, inplace=True)
+	ip_fail_df = ip_fail_df.reset_index()
+	ip_fail_df = ip_fail_df.sort_values(by='Count', ascending=False)
+	ip_fail_list = ip_fail_df.index.tolist()
+	ip_list_count = len(ip_fail_list)
+
+	st.header('IP Unsuccessful Access Count')
+	ip_count_slider = st.slider('IP Count', max_value=username_list_count, value=5)
+	st.table(ip_fail_df.head(ip_count_slider).set_index('Source_IP'))
+	#except:
+	#	pass
 
 def search():
 	db.log_pull()

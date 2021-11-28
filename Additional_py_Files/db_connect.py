@@ -247,8 +247,7 @@ def db_log_add(full_logs):
     time_bar = len(full_logs)
     db = sqlite3.connect('Data/ned.db')
     with alive_bar(time_bar) as bar:
-        #for x in stqdm(full_logs, desc='Adding full logs to database'):
-        for x in full_logs:
+        for x in stqdm(full_logs, desc='Adding full logs to database'):
             cursor = db.cursor()
             cursor.execute('INSERT OR IGNORE INTO Full_Log(log) VALUES (?)',[x])
             db.commit()
@@ -319,8 +318,12 @@ def log_pull():
 
             with open(save_name, 'r') as f:
                 log = [line.strip() for line in f]
-                for a in log:
-                    full_logs.append(a)
+                time_bar = len(log)
+                with alive_bar(time_bar) as bar:
+                    log_message = 'Adding logs from' + x
+                    for a in stqdm(log, desc=log_message):
+                        full_logs.append(a)
+                        bar()
                     
                 print('Created log for', box)
                 if os.path.exists(save_name):
@@ -359,7 +362,13 @@ def log_update():
         min_df = min_df.append(new_row, ignore_index=True)
     
     min_df = min_df.set_index(['Box'])
+    dt = 'Jan 1 1900 01:01:01'
+    dtg = datetime.strptime(dt, '%b %d %Y %H:%M:%S')
+    min_df['Last'] = min_df['Last'].fillna(dtg)
     min_df['Last'] = pd.to_datetime(min_df['Last']).dt.tz_localize(pytz.timezone('UTC'))
+
+
+    print(min_df)
     
     logs = log_pull()
     
@@ -381,7 +390,7 @@ def log_update():
                 dtg = dtg.replace(tzinfo=timezone.utc)
                 for b in boxes:
                     if box == b:
-                        last_pull = min_df.loc['Liberty'][0]
+                        last_pull = min_df.loc[b][0]
                         if last_pull <= dtg:
                             updated_logs.append(l)
                         else:
@@ -389,8 +398,9 @@ def log_update():
                     else:
                         pass
             except:
-                print(l)
-            bar()
+                pass
+                #print(l)
+            bar()   
 
     db_log_add(updated_logs)
     new_auth_logs = auth_log_to_db(updated_logs)

@@ -15,6 +15,7 @@ from dateutil.relativedelta import relativedelta
 import numpy as np
 from datetime import datetime, timedelta
 
+
 import db_connect as db
 
 def home():
@@ -254,6 +255,8 @@ def home():
 	            ],
 	        )
 	 	)
+ 	m = folium.Map(location=[7.381982, 19.350969], zoom_start=3)
+
 
 def search():
 	db.log_update()

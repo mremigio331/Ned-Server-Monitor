@@ -1,6 +1,7 @@
 # Ned Server Monitoring System 
 
 ![Output](Images/Ned_Logo_Pictorial_Full.png)
+![Output](Images/Ned_Network_Monitor.png)
 
 Ned is a server monitoring code that allows you to see what IPs have successfully and unsuccessfully connected to your servers. Ned uses Streamlit for it's GUI. 
 
@@ -48,6 +49,8 @@ Grabbing Information From Your Server
 
 # Home Page
 
+![Output](Images/Ned.gif)
+
 The home page is the default page once opening Ned. This page displays by default the last 7 days worth of information. It includes two different data frames (Successful Authentications and Failed Authentications) as well as maps that connect to them. 
 
 To gather information, select the Load Data option in the side bar. The code will SCP the authentication logs from your server, add it to the Ned Database, sort the relevant information, and delete the authentication log SCPed.
@@ -58,9 +61,16 @@ This page also has a map with a heat map to display which areas in the world hav
 
 The Server Settings Page is where you add, edit, delete and see the status of your servers.
 
+![Output](Images/Server_Settings.png)
+
 # Statistics Page
 
-The statistics page is currently a work in progress. It displays a few charts to show some statistical data from your servers.
+
+The statistics page is where you can find statistical data regarding successful and unsuccessful access to your servers.
+
+![Output](Images/Ned_Statsticis_1.png)
+![Output](Images/Ned_Statsticis_2.png)
+![Output](Images/Ned_Statsticis_3.png)
 
 # Information Page
 
@@ -70,20 +80,14 @@ The Information Page describes the steps needed to connect a server.
 
 I will be working on the following things to add to this code:
 
-	Adding a settings page to change the default last 7 days of activity to a number of your choosing.
-
 	Displaying on the Home Page data that has been transferred to and from the servers.
 
 	Have an option to continuously pull authentication logs from servers rather than manually requesting them via the Load Data button.
 
 	Option of identifying not just the SSH port but all ports in order to detect new attack vectors.
 
-	Optimizing the authentication logs to data frame in order to speed up the process.
-
 	Option to create SSH Keys within Ned rather than creating them outside Ned via a terminal. 
 
-# Screenshots
 
-![Output](Images/Ned_Network_Monitor.JPG)
-![Output](Images/Server_Settings.png)
-![Output](Images/Server_Status.png)
+
+

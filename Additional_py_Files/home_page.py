@@ -183,17 +183,17 @@ def home():
 
 
 	    tcol_1.header('Successful Authorizations')
-	    tcol_1.text('Successful Data Frame')
+	    tcol_1.subheader('Successful Data Frame')
 	    tcol_1.dataframe(pass_logs[['Source_IP','Box','City','Country','User','By_Way']])
 	    
 	    
 
 	    tcol_2.header('Failed Authorizations')
-	    tcol_2.text('Failed Data Frame')
+	    tcol_2.subheader('Failed Data Frame')
 	    tcol_2.dataframe(failed_logs[['Source_IP','Box','City','Country','User']])
 	    
 	    
-	    bcol_1.text('Successful Connection IPs Map')
+	    bcol_1.subheader('Successful Connection IPs Map')
 
 	    bcol_1.pydeck_chart(
 	        pdk.Deck(
@@ -224,7 +224,7 @@ def home():
 	            ],
 	        )
 	    )
-	    bcol_2.text('Failed Connection IPs Map')
+	    bcol_2.subheader('Failed Connection IPs Map')
 	    bcol_2.pydeck_chart(
 	        pdk.Deck(
 	            map_style='mapbox://styles/mapbox/dark-v10',
@@ -256,7 +256,6 @@ def home():
 	 	)
 
 def search():
-	db.log_pull()
-	db.auth_log_to_db()
+	db.log_update()
 	auth_logs = db.auth_logs_to_df()
 	auth_logs.sort_values(by=['Date_Time'], inplace=True, ascending=False)

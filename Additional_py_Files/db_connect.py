@@ -4,20 +4,17 @@ import glob
 import pandas as pd
 import pysftp
 from time import strptime
-from datetime import datetime
 from pytz import timezone
 from time import strptime
-from datetime import datetime
-from dateutil import tz
-import datetime
+from datetime import *
 import pytz
 import geoip2.database
 import pydeck as pdk
 from alive_progress import alive_bar, config_handler
-from dateutil.relativedelta import relativedelta
 import numpy as np
 import sqlite3
 from stqdm import stqdm
+from backports.zoneinfo import ZoneInfo
 
 
 
@@ -35,10 +32,8 @@ def add_server(box, ip, username, private_key, port):
     except:
         print('Failed to insert box information into Boxes table')
    
-def auth_log_to_db():
-    db = sqlite3.connect('Data/ned.db')
-    df = pd.read_sql_query('SELECT * FROM Full_Log', db)
-    full_log = df['Log'].tolist()
+def auth_log_to_db(new_logs):
+    full_log = new_logs
 
     auth_logs = pd.DataFrame(columns = ['Date_Time', 'Date', 'Time','Source_IP','Access','Box','User','By_Way', 'City', 'Country', 'Lat', 'Lon'])
 
@@ -65,11 +60,11 @@ def auth_log_to_db():
                             hour = int(time.split(':')[0])
                             minute = int(time.split(':')[1])
                             second = int(time.split(':')[2])
-                            dt = datetime.datetime(2021, num_month, day, hour, minute, second, tzinfo=pytz.UTC)
-
+                            year = int(datetime.utcnow().year)
+                            dt = datetime(year, num_month, day, hour, minute, second, tzinfo=pytz.UTC)
                             fmt = "%Y/%m/%d %H:%M:%S"
-                            pacific = dt.astimezone(timezone('US/Pacific'))
-                            date_time = pacific.strftime(fmt)
+                            dt.astimezone(ZoneInfo('US/Pacific'))
+                            date_time = dt.strftime(fmt)
                             ip = x.split('from ')[1].split(' ')[0]
                             box = x.split(' ')[3]
                             user = x.split('for ')[1].split(' ')[0]
@@ -100,11 +95,12 @@ def auth_log_to_db():
                             hour = int(time.split(':')[0])
                             minute = int(time.split(':')[1])
                             second = int(time.split(':')[2])
-                            dt = datetime.datetime(2021, num_month, day, hour, minute, second, tzinfo=pytz.UTC)
+                            year = int(datetime.utcnow().year)
+                            dt = datetime(year, num_month, day, hour, minute, second, tzinfo=pytz.UTC)
 
                             fmt = "%Y/%m/%d %H:%M:%S"
-                            pacific = dt.astimezone(timezone('US/Pacific'))
-                            date_time = pacific.strftime(fmt)
+                            dt.astimezone(ZoneInfo('US/Pacific'))
+                            date_time = dt.strftime(fmt)
                             ip = x.split('from ')[1].split(' ')[0]
                             box = x.split(' ')[3]
                             user = x.split('for ')[1].split(' ')[0]
@@ -124,7 +120,7 @@ def auth_log_to_db():
 
                             new_row = {'Date_Time':date_time.split(' PDT-0700')[0],'Source_IP':ip, 'Access':'Successful','Box':box,'User':user,'By_Way':'Password','City':city,'Country':country,'Lat':lat,'Lon':lon,'Date':date_time.split(' ')[0],'Time':date_time.split(' ')[1]}
                             auth_logs = auth_logs.append(new_row, ignore_index=True)
-                except:
+                except:   
                     pass
                 try:
                     if 'Failed' in x:
@@ -136,12 +132,13 @@ def auth_log_to_db():
                             hour = int(time.split(':')[0])
                             minute = int(time.split(':')[1])
                             second = int(time.split(':')[2])
-                            dt = datetime.datetime(2021, num_month, day, hour, minute, second, tzinfo=pytz.UTC)
+                            year = int(datetime.utcnow().year)
+                            dt = datetime(year, num_month, day, hour, minute, second, tzinfo=pytz.UTC)
 
 
                             fmt = "%Y/%m/%d %H:%M:%S"
-                            pacific = dt.astimezone(timezone('US/Pacific'))
-                            date_time = pacific.strftime(fmt)
+                            dt.astimezone(ZoneInfo('US/Pacific'))
+                            date_time = dt.strftime(fmt)
                             ip = x.split(' ')[12]
                             box = x.split(' ')[3]
                             user = x.split(' ')[10]
@@ -171,12 +168,13 @@ def auth_log_to_db():
                             hour = int(time.split(':')[0])
                             minute = int(time.split(':')[1])
                             second = int(time.split(':')[2])
-                            dt = datetime.datetime(2021, num_month, day, hour, minute, second, tzinfo=pytz.UTC)
+                            year = int(datetime.utcnow().year)
+                            dt = datetime(year, num_month, day, hour, minute, second, tzinfo=pytz.UTC)
 
 
                             fmt = "%Y/%m/%d %H:%M:%S"
-                            pacific = dt.astimezone(timezone('US/Pacific'))
-                            date_time = pacific.strftime(fmt)
+                            dt.astimezone(ZoneInfo('US/Pacific'))
+                            date_time = dt.strftime(fmt)
                             ip = x.split(' ')[10]
                             box = x.split(' ')[3]
                             user = x.split(' ')[8]
@@ -214,7 +212,7 @@ def auth_log_to_db():
 
     conn = sqlite3.connect('Data/ned.db')
     c = conn.cursor()
-    auth_logs.to_sql('Auth_Logs', conn, if_exists='replace', index = False)
+    auth_logs.to_sql('Auth_Logs', conn, if_exists='append', index = False)
     try:
         c.close
         conn.close()
@@ -249,7 +247,8 @@ def db_log_add(full_logs):
     time_bar = len(full_logs)
     db = sqlite3.connect('Data/ned.db')
     with alive_bar(time_bar) as bar:
-        for x in stqdm(full_logs, desc='Adding full logs to database'):
+        #for x in stqdm(full_logs, desc='Adding full logs to database'):
+        for x in full_logs:
             cursor = db.cursor()
             cursor.execute('INSERT OR IGNORE INTO Full_Log(log) VALUES (?)',[x])
             db.commit()
@@ -277,11 +276,14 @@ def grab_country_codes():
             
 def log_pull():
 
-    print('Starting Log Pull')
+    message = 'Starting Log Pull'
+    print(message)
+    st.info(message)
     
     boxes = grab_box_info()
     box_names = []
     full_logs = []
+    success_scp = []
     
     for index, row in boxes.iterrows():
         box = str(row['Box'])
@@ -311,7 +313,10 @@ def log_pull():
             with pysftp.Connection(ip, username=usname, private_key=p_key, port=box_port, cnopts=cnopts) as sftp:
                 with sftp.cd('.'):
                     sftp.get('/var/log/auth.log', save_name)         # get a remote file
-                    print('Successfully SCP file from', box)
+                    message = 'Successfully SCP file from ' + box
+                    print(message)
+                    success_scp.append(box)
+
             with open(save_name, 'r') as f:
                 log = [line.strip() for line in f]
                 for a in log:
@@ -326,8 +331,73 @@ def log_pull():
             st.error('Unsuccessfully connected to ' + x)
             print('Connection not made to', box)
 
-    db_log_add(full_logs)        
+    success_scp.sort()
+    last = success_scp[-1]
+    del success_scp[-1]
+    success_scp.append('and ' + last + '.')
+    message = 'Successfully SCP files from ' + ' , '.join(success_scp)
+    st.success(message)
+
     return full_logs
+
+def log_update():
+
+    boxesdf = grab_box_info()
+    boxes = []
+
+    for index, row in boxesdf.iterrows():
+        box = str(row['Box'])
+        boxes.append(box)
+    auth_logs = auth_logs_to_df()
+    min_df = pd.DataFrame(columns = ['Box','Last'])
+    
+    for x in boxes:
+        df = auth_logs[auth_logs.Box == x]
+        last_pull = df['Date_Time'].max()
+        new_row = {'Box':x,'Last':last_pull}
+        print(new_row)
+        min_df = min_df.append(new_row, ignore_index=True)
+    
+    min_df = min_df.set_index(['Box'])
+    min_df['Last'] = pd.to_datetime(min_df['Last']).dt.tz_localize(pytz.timezone('UTC'))
+    
+    logs = log_pull()
+    
+    updated_logs = []
+
+    time_bar = len(logs)
+    
+    print('Searching For New Logs')
+    with alive_bar(time_bar) as bar:
+        for l in stqdm(logs, desc='Searching For New Logs'):
+            try:
+                month = l.split(' ')[0]
+                day = l.split(' ')[1]
+                year = str(datetime.now().year)
+                time = l.split(' ')[2]
+                dtg = (month + ' ' + day + ' ' + str(year) + ' ' + time)
+                box = l.split(' ')[3]
+                dtg = datetime.strptime(dtg, '%b %d %Y %H:%M:%S')
+                dtg = dtg.replace(tzinfo=timezone.utc)
+                for b in boxes:
+                    if box == b:
+                        last_pull = min_df.loc['Liberty'][0]
+                        if last_pull <= dtg:
+                            updated_logs.append(l)
+                        else:
+                            pass
+                    else:
+                        pass
+            except:
+                print(l)
+            bar()
+
+    db_log_add(updated_logs)
+    new_auth_logs = auth_log_to_db(updated_logs)
+    index = new_auth_logs.index
+    number_of_rows = len(index)
+    print(str(number_of_rows) + ' logs added to Ned data')
+    st.success(str(number_of_rows) + ' logs added to Ned data')
     
 def server_connection_check(server):
     x = server

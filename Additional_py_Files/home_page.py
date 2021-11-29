@@ -30,7 +30,7 @@ def home():
 
 	auth_logs = db.auth_logs_to_df()
 	auth_logs.sort_values(by=['Date_Time'], inplace=True, ascending=False)
-	auth_logs = auth_logs.set_index('Date_Time')
+	#auth_logs = auth_logs.set_index('Date_Time')
 
 	# Jumpbox Data
 	jump_boxes = []
@@ -185,13 +185,13 @@ def home():
 
 	    tcol_1.header('Successful Authorizations')
 	    tcol_1.subheader('Successful Data Frame')
-	    tcol_1.dataframe(pass_logs[['Source_IP','Box','City','Country','User','By_Way']])
+	    tcol_1.dataframe(pass_logs[['Date_Time','Source_IP','Box','City','Country','User','By_Way']])
 	    
 	    
 
 	    tcol_2.header('Failed Authorizations')
 	    tcol_2.subheader('Failed Data Frame')
-	    tcol_2.dataframe(failed_logs[['Source_IP','Box','City','Country','User']])
+	    tcol_2.dataframe(failed_logs[['Date_Time','Source_IP','Box','City','Country','User']])
 	    
 	    
 	    bcol_1.subheader('Successful Connection IPs Map')
@@ -221,8 +221,12 @@ def home():
 	                    get_fill_color=[0, 128, 0],
 	                    get_line_color=[0, 0, 0]
 	                ),
-	                 
 	            ],
+	        tooltip={"html": "<b>Box: </b> {Box} <br /> "
+	        "<b>Lon: </b> {Lon} <br /> "
+            "<b>Lat: </b>{Lat} <br /> "
+            "<b> City: </b>{City} <br /> "
+            "<b> Country: </b>{Country}"}
 	        )
 	    )
 	    bcol_2.subheader('Failed Connection IPs Map')
@@ -253,6 +257,11 @@ def home():
 	                ),
 	                 
 	            ],
+	        tooltip={"html": "<b>Box: </b> {Box} <br /> "
+	        "<b>Lon: </b> {Lon} <br /> "
+            "<b>Lat: </b>{Lat} <br /> "
+            "<b> City: </b>{City}"
+            "<b> Country: </b>{Country} <br /> "}
 	        )
 	 	)
 

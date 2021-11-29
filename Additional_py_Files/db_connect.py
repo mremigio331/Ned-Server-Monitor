@@ -275,10 +275,6 @@ def grab_country_codes():
             
 def log_pull():
 
-    message = 'Starting Log Pull'
-    print(message)
-    st.info(message)
-    
     boxes = grab_box_info()
     box_names = []
     full_logs = []
@@ -289,7 +285,8 @@ def log_pull():
         box_names.append(box)
         print('Appended', box)
     
-    for x in box_names:
+    print('Starting Log Pull')
+    for x in stqdm(box_names, desc='Starting Log Pull'):
         db = sqlite3.connect('Data/ned.db')
         cursor = db.cursor()
         searchresult = '"'+x+'"'

@@ -17,7 +17,6 @@ from stqdm import stqdm
 from backports.zoneinfo import ZoneInfo
 
 
-
 def add_server(box, ip, username, private_key, port):
     root = 'root' 
     try:
@@ -253,6 +252,15 @@ def db_log_add(full_logs):
             db.commit()
             bar()
 
+def full_logs():
+    try:
+        db = sqlite3.connect('Data/ned.db')
+        df = pd.read_sql_query('SELECT * FROM Full_Log', db)
+        return df
+        print('Successfully connected to database')
+    except:
+        print('Unsuccessfully connected to database')
+
 def grab_box_info():
     print('Loading Box Information')
     try:
@@ -377,6 +385,10 @@ def log_update():
     with alive_bar(time_bar) as bar:
         for l in stqdm(logs, desc='Searching For New Logs'):
             try:
+                l = l.replace('  ', ' ')
+            except:
+                pass
+            try:
                 month = l.split(' ')[0]
                 day = l.split(' ')[1]
                 year = str(datetime.now().year)
@@ -388,7 +400,7 @@ def log_update():
                 for b in boxes:
                     if box == b:
                         last_pull = min_df.loc[b][0]
-                        if last_pull <= dtg:
+                        if last_pull < dtg:
                             updated_logs.append(l)
                         else:
                             pass

@@ -19,7 +19,7 @@ def statistics():
 	#Side Bar
 	result = st.sidebar.button('Load Data')
 	if result:
-	    search()
+		search()
 	
 	# Jumpbox Data
 	jump_boxes = []
@@ -223,7 +223,7 @@ def statistics():
 		box_fail_df = box_fail_df.sort_values(by='Count', ascending=False)
 
 		st.header('Box Unsuccessful Access Count')
-		st.table(box_fail_df)
+		st.table(box_fail_df.set_index('Box'))
 	except:
 		pass
 
@@ -272,20 +272,20 @@ def statistics():
 	except:
 		pass
 
-	#try:
-	ip_fail = failed_logs.groupby('Source_IP')['Time'].nunique()
-	ip_fail_df = ip_fail.to_frame()
-	ip_fail_df.rename({'Time':'Count'}, axis=1, inplace=True)
-	ip_fail_df = ip_fail_df.reset_index()
-	ip_fail_df = ip_fail_df.sort_values(by='Count', ascending=False)
-	ip_fail_list = ip_fail_df.index.tolist()
-	ip_list_count = len(ip_fail_list)
+	try:
+		ip_fail = failed_logs.groupby('Source_IP')['Time'].nunique()
+		ip_fail_df = ip_fail.to_frame()
+		ip_fail_df.rename({'Time':'Count'}, axis=1, inplace=True)
+		ip_fail_df = ip_fail_df.reset_index()
+		ip_fail_df = ip_fail_df.sort_values(by='Count', ascending=False)
+		ip_fail_list = ip_fail_df.index.tolist()
+		ip_list_count = len(ip_fail_list)
 
-	st.header('IP Unsuccessful Access Count')
-	ip_count_slider = st.slider('IP Count', max_value=username_list_count, value=5)
-	st.table(ip_fail_df.head(ip_count_slider).set_index('Source_IP'))
-	#except:
-	#	pass
+		st.header('IP Unsuccessful Access Count')
+		ip_count_slider = st.slider('IP Count', max_value=username_list_count, value=5)
+		st.table(ip_fail_df.head(ip_count_slider).set_index('Source_IP'))
+	except:
+		pass
 
 def search():
 	db.log_pull()

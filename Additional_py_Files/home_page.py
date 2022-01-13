@@ -156,7 +156,8 @@ def home():
 			min_date_time = datetime(int(year), int(month), int(date))
 
 			with layout[0]: 
-			    start_date = st.date_input('Start Date:',max_value=datetime.today()) # omit "sidebar"
+			    start_date = st.date_input('Start Date:',max_value=datetime.utcnow()) # omit "sidebar"
+			
 			with layout[0]: 
 			    end_date = st.date_input('End Date:',value=(d), min_value = min_date_time,max_value=datetime.today()) # omit "sidebar"
 
